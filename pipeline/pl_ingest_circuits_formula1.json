@@ -3,243 +3,301 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Ingest races file",
-				"type": "DatabricksNotebook",
+				"name": "Get Folder detaild",
+				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
-					"retryIntervalInSeconds": 600,
+					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/2.f1_Delta_full_load_ingest_race_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
-						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
+					"dataset": {
+						"referenceName": "ds_adls_formula1_raw",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_window_end_date": {
+								"value": "@pipeline().parameters.p_window_end_date",
+								"type": "Expression"
+							}
 						}
+					},
+					"fieldList": [
+						"exists",
+						"itemName",
+						"lastModified"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{
-				"name": "Ingest circuits file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
+				"name": "If Folder Exists",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get Folder detaild",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/1.f1_Delta_full_load_ingest_circuits_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+					"expression": {
+						"value": "@activity('Get Folder detaild').output.exists",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Ingest races file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/2.f1_Delta_full_load_ingest_race_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest constructors file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/3.f1_Delta_full_load_ingest_constructors_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest circuits file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/1.f1_Delta_full_load_ingest_circuits_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest drivers file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/4.f1_Delta_full_load_ingest_drivers_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest constructors file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/3.f1_Delta_full_load_ingest_constructors_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest results file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/5.f1_Delta_incremental_load_ingest_results_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest drivers file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/4.f1_Delta_full_load_ingest_drivers_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest pitstops file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/6.f1_Delta_incremental_load_ingest_pit_stops_file",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest results file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/5.f1_Delta_incremental_load_ingest_results_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest laptimes file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/7.f1_Delta_incremental_load_ingest_laptimes_folder",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest pitstops file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/6.f1_Delta_incremental_load_ingest_pit_stops_file",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Ingest qualifying file",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 600,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/8.f1_Delta_incremental_load_ingest_qualifying_folder",
-					"baseParameters": {
-						"p_data_source": {
-							"value": "@variables('v_data_source')",
-							"type": "Expression"
+						{
+							"name": "Ingest laptimes file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/7.f1_Delta_incremental_load_ingest_laptimes_folder",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						},
-						"p_file_date": {
-							"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
-							"type": "Expression"
+						{
+							"name": "Ingest qualifying file",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_ingestion_incremental load solution (1)/8.f1_Delta_incremental_load_ingest_qualifying_folder",
+								"baseParameters": {
+									"p_data_source": {
+										"value": "@variables('v_data_source')",
+										"type": "Expression"
+									},
+									"p_file_date": {
+										"value": "@formatDateTime(pipeline().parameters.p_window_end_date,'yyyy-MM-dd')",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
 						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_databricks_rs",
-					"type": "LinkedServiceReference"
+					]
 				}
 			}
 		],
