@@ -1,0 +1,9 @@
+{
+	"name": "dev-ci-dc-f1-df",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "54ca2712-6a7d-49aa-ac56-cc01fe86db6e",
+		"tenantId": "dc065c03-4488-4cb0-a141-2d248189145d"
+	}
+}
