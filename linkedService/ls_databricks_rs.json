@@ -1,0 +1,13 @@
+{
+	"name": "ls_databricks_rs",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7357661580922880.0.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/75c51841-1f63-4a50-be48-9eed25f8648c/resourceGroups/udemy_courses/providers/Microsoft.Databricks/workspaces/rosiespoor",
+			"existingClusterId": "0418-120129-83re8v3d"
+		}
+	}
+}
