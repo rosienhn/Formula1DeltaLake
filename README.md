@@ -14,9 +14,9 @@ The project aims to build a data pipeline for historical and up-to-date Formula1
 
 Accessing Formula One data is possible through the Ergaste API, which provides data for all races from 1950 onwards. This database contains an API that can return data in XML or JSON formats, and the database tables can also be downloaded in CSV format. Data can be received as a full dataset, but I chose to process them incrementally in a hybrid scenario to strengthen my understanding of real-world scenarios.
 
-Generally, Formula One races happen on Sundays, but not every Sunday. There are usually only 20 to 24 weeks in a year in which races happen, and in the other weeks, there are no races. To set up incremental loading in this project, I downloaded the file in CSV format and then used Python to split the file into smaller files, each containing a specific number of race IDs based on event dates.
+Generally, Formula One races happen on Sundays, but not every Sunday. There are usually only 20 to 24 weeks in a year in which races happen, and in the other weeks, there are no races. To set up incremental loading in this project, I downloaded the file in CSV format then used Python to split each file into smaller files, each containing a specific number of race IDs based on event dates.
 
-In this scenario, it is assumed that on day one (which is a Sunday), we will receive the first file containing data for all prior races up to race 1096 on the cutover date of 21-11-2022. On 20-03-2023, we will receive data for the next two races, which are race IDs 1098-1099. Race 1097 data is not available on the Ergast API. On 2/4/2023, we will receive the data for the lastest race 1100, which is the "Australian Grand Prix" that took place on 2023-04-02. After that, data will be updated every Sunday.
+In this scenario, it is assumed that on day one (which is a Sunday), we will receive the first file containing data for all prior races up to race 1096 on the cutover date of 21-11-2022. On 20-03-2023, we will receive data for the next two races, which are race IDs 1098-1099. Race 1097 data is not available on Ergast API. On 2/4/2023, we will receive the data for the lastest race 1100, which is the "Australian Grand Prix" that took place on 2/4/2023. After that, pipeline will be scheduled to update every Sunday.
 
 1. Data is stored in DataLake Azure ADLS Gen2, organized by event date.
 2. Using Databricks, the data must be ingested into Data lake/Delta lake in parquet/delta formats, transformed into tables for reporting and analysis, and made available for machine learning and SQL workloads. The project also involves determining the most dominant drivers and teams for producing BI reports.
@@ -41,16 +41,14 @@ The tasks include determining the most dominant drivers and teams over the last 
 ### Scheduling Requirements
 * Schedule pipelines to run at 11.30 p.m. every Sunday.
 * Monitor pipeline status and re-run failed pipelines and set up alerts on failures.
-* Set up alerts for pipeline failures.
 * Delete individual records from the Data Lake to satisfy user privacy legislation (e.g. GDPR).
 * Enable time travel and ability to query data based on time.
 * Roll back data to previous versions in case of issues.
 
 ## Technical Requirements and Environment setup:
-* Azure Subcription
 * Azure Data Lake Storage Gen2
 * Azure Data Factory
-* Azure Databricks and Delta Lake
+* Azure Databricks 
   * Creating, configuring and monitoring Databricks clusters
   * Mounting Azure Storage in Databricks using secrets stored in Azure Key Vault
   * Using Delta Lake to implement a solution using Lakehouse architecture
