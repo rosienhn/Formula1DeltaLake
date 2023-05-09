@@ -32,6 +32,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -332,6 +333,9 @@
 				"type": "String",
 				"defaultValue": "Ergast"
 			}
+		},
+		"folder": {
+			"name": "F1_process_data_DeltaLake"
 		},
 		"annotations": []
 	}

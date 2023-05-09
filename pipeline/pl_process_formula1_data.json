@@ -54,6 +54,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "F1_process_data_DeltaLake"
+		},
 		"annotations": []
 	}
 }
