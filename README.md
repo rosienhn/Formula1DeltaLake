@@ -1,5 +1,5 @@
 
-# Building Cloud Data platform for Formula 1 data using Azure Data Factory, Databricks and  Delta Lake to implement a solution using Lakehouse architecture.
+# Building Cloud Data platform for Formula 1 data using Azure Data Factory, Databricks and Lakehouse architecture.
 
 ## Overview
 
