@@ -1,0 +1,41 @@
+{
+	"name": "ds_top10_driver_everyyear_sqldb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_SQL_db_f1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "race_year",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "driver_name",
+				"type": "varchar"
+			},
+			{
+				"name": "position",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "points",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "calculated_points",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "f1_reporting",
+			"table": "top10_drivers_every_year_sql"
+		}
+	}
+}

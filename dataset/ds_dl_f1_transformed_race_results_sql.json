@@ -1,0 +1,61 @@
+{
+	"name": "ds_dl_f1_transformed_race_results_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_formula1_dl",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "delta_race_results_sql",
+				"fileSystem": "f1presentation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "race_year",
+				"type": "INT32"
+			},
+			{
+				"name": "team_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "driver_id",
+				"type": "INT32"
+			},
+			{
+				"name": "driver_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "race_id",
+				"type": "INT32"
+			},
+			{
+				"name": "position",
+				"type": "INT32"
+			},
+			{
+				"name": "points",
+				"type": "INT32"
+			},
+			{
+				"name": "calculated_points",
+				"type": "INT32"
+			},
+			{
+				"name": "created_date",
+				"type": "INT96"
+			},
+			{
+				"name": "updated_date",
+				"type": "INT96"
+			}
+		]
+	}
+}
