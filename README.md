@@ -43,3 +43,5 @@ It's recommended to go through some documentation before proceeding with this pr
 ### Technologies
 * Data Pipeline
 * Spark (Spark streaming and Spark Machine Learning were not covered in this project)
+
+This project has been taken inspiration from 2 Udemy courses.
