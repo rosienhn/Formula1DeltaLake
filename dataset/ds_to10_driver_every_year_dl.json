@@ -13,7 +13,7 @@
 				"folderPath": "calculated_top10_driver_every_year",
 				"fileSystem": "f1presentation"
 			},
-			"compressionCodec": "snappy"
+			"compressionCodec": "none"
 		},
 		"schema": [
 			{

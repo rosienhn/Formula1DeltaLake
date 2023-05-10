@@ -13,7 +13,7 @@
 				"folderPath": "calculated_dominant_drivers_all_time",
 				"fileSystem": "f1presentation"
 			},
-			"compressionCodec": "snappy"
+			"compressionCodec": "none"
 		},
 		"schema": [
 			{
