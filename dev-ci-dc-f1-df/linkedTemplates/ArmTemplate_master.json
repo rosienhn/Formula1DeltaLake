@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dev-ci-dc-f1-df"
+		},
+		"ls_SQL_db_f1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_SQL_db_f1'"
+		},
+		"ls_adls_formula1_dl_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adls_formula1_dl'"
+		},
+		"ls_adls_formula1_dl_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlrosies.dfs.core.windows.net/"
+		},
+		"ls_databricks_rs_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0418-120129-83re8v3d"
+		},
+		"tr_process_formula1_data_properties_pipeline_parameters_p_window_end_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndtime"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "dev-ci-dc-f1-df_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_SQL_db_f1_connectionString": {
+						"value": "[parameters('ls_SQL_db_f1_connectionString')]"
+					},
+					"ls_adls_formula1_dl_accountKey": {
+						"value": "[parameters('ls_adls_formula1_dl_accountKey')]"
+					},
+					"ls_adls_formula1_dl_properties_typeProperties_url": {
+						"value": "[parameters('ls_adls_formula1_dl_properties_typeProperties_url')]"
+					},
+					"ls_databricks_rs_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('ls_databricks_rs_properties_typeProperties_existingClusterId')]"
+					},
+					"tr_process_formula1_data_properties_pipeline_parameters_p_window_end_date": {
+						"value": "[parameters('tr_process_formula1_data_properties_pipeline_parameters_p_window_end_date')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
