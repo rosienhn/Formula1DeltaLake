@@ -44,4 +44,4 @@ It's recommended to go through some documentation before proceeding with this pr
 * Data Pipeline
 * Spark (Spark streaming and Spark Machine Learning were not covered in this project)
 
-This project has been taken inspiration from 2 Udemy courses.
+This project takes its inspiration from 2 Udemy courses: https://www.udemy.com/course/learn-azure-data-factory-from-scratch/ and https://www.udemy.com/course/azure-databricks-spark-core-for-data-engineers/
