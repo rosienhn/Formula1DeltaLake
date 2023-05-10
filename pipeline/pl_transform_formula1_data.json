@@ -57,6 +57,26 @@
 						"value": "@activity('Get Folder detaild').output.exists",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Send email",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": "http://url.com",
+								"method": "POST",
+								"body": "Error"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Transform race_results",
@@ -170,6 +190,168 @@
 										"type": "Expression"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Find_Dominant_drivers",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Incremental_load_race_results_using_SQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/5.f1_Delta_find_dominant_driver_using_SQL"
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Find_Dominant_Teams",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Incremental_load_race_results_using_SQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/6.f1_Delta_find_dominant_team_using_SQL"
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Copy race_results to SQL db",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Incremental_load_race_results_using_SQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/7.f1_Copy_delta_race_results_table_to_sqldb"
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Copy dominant team table to Azure SQL db",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Find_Dominant_Teams",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/8.f1_Copy_delta_dominent_team_table_to_sqldb"
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Copy Top10 dominant drivers every year to SQL db",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Find_Dominant_drivers",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/9.f1_Copy_delta_top10_drivers_table_to_sqldb"
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_databricks_rs",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Copy dominant drivers of all time to SQL db",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Find_Dominant_drivers",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 600,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/F1_Portfolio/Delta_trans/10.f1_Copy_delta_dominant_drivers_all_time_table_to_sqldb"
 							},
 							"linkedServiceName": {
 								"referenceName": "ls_databricks_rs",
