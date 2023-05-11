@@ -27,12 +27,13 @@ The new dataset after splitting was uploaded into DataLake Azure ADLS Gen2, orga
 It's recommended to go through some documentation before proceeding with this project. The Ergast Developer API website provides extensive information about the various tables and their relationships. To get a better understanding, it's beneficial to review the ERD diagram and Ergast Database User Guide
 
 ## Technical Requirements and Environment setup:
+* Azure subcription
 * Azure Data Lake Storage Gen2
 * Azure Data Factory
 * Azure Databricks 
-  * Creating, configuring and monitoring Databricks clusters
-  * Mounting Azure Storage in Databricks using secrets stored in Azure Key Vault
-  * Using Delta Lake to implement a solution using Lakehouse architecture
+  * Create, configure and monitor Databricks clusters
+  * Configure Databricks to use the ABFS driver to read and write data stored on Azure Data Lake Storage Gen2 using secrets stored in Azure Key Vault.
+  * Use Delta Lake to implement a solution using Lakehouse architecture
 * Azure SQL Database
 * Azure Key Vault
 
