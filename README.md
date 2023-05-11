@@ -3,14 +3,13 @@
 
 ## Overview
 
-The project aims to build a data pipeline for historical and up-to-date Formula1 data using Azure Data Factory. Databricks and  Delta Lake were used to implement a solution using Lakehouse architecture.
-Using databricks, data must be ingested into a Delta lake in delta formats, transformed into tables for reporting and analysis, and made available for machine learning/reporting and copy to Azure SQL database. Data pipelines must be scheduled, monitored, and alerts set up for pipeline failures.
+This project aims to build a data pipeline which is scheduled and triggered by Azure Data Factory pipelines for historical and up-to-date Formula1 data. Databricks and Delta Lake were used to implement a solution using Lakehouse architecture.
 
-Accessing Formula One data is possible through the Ergaste API, which provides data for all races from 1950 onwards. This database contains an API that can return data in XML or JSON formats, and the database tables can also be downloaded in CSV format. Data can be received as a full dataset, but I chose to process them incrementally in a hybrid scenario to strengthen my understanding of real-world scenarios.
+To access Formula One data, the Ergast API was used to retrieve data for all races dating back to 1950. The API offers data in XML or JSON formats, and CSV-formatted database tables can also be downloaded. Although the entire dataset can be obtained at once, I opted to process it incrementally to better understand real-world scenarios.
 
-Generally, Formula One races happen on Sundays, but not every Sunday. There are usually only 20 to 24 weeks in a year in which races happen, and in the other weeks, there are no races. To set up incremental loading in this project, I downloaded the zip file from Ergast API, extract all files into CSV format. Each CSV file contains a single database table. Python was used later to split files into smaller files, each containing a specific number of race IDs based on event dates.
+Formula One races usually take place on Sundays, but not every Sunday is reserved for a race. Races are typically scheduled for only 20 to 24 weeks per year, with no races scheduled during the remaining weeks. To implement incremental loading, I downloaded a zip file from the Ergast API and extracted its contents into CSV format. Each CSV file contained a single database table, which I split into smaller segments based on race IDs using Python.
 
-In this scenario, it is assumed that on day one (which is a Sunday), we will receive the first file containing data for all prior races up to race 1096 on the cutover date of 21-11-2022. On 20-03-2023, we will receive data for the next two races, which are race IDs 1098-1099. Race 1097 data is not available on Ergast API. On 2/4/2023, we will receive the data for the lastest race 1100, which is the "Australian Grand Prix" that took place on 2/4/2023. After that, pipeline will be scheduled to update every Sunday 11:30pm.
+For this project, I assumed that the first data containing data for all races up to race 1096 on the cutover date of December 24, 2022, will be received on that day, which is a Sunday. Data for the next two races, raceIDs 1098-1099, will be received on March 19, 2023 (data for race 1097 is not available on the Ergast API). On April 2, 2023, data for the latest race, race ID 1100, which is the "Australian Grand Prix" held on that day, will be received. After that, data will be updated every Sunday.
 | File name| Desciption | 
 | -------- | -------- | 
 | Circuits.csv, Drivers.csv, Constructors.csv, Races.csv| contains all the information related to the circuits, the drivers, the teams and the races. It was assumed that those information remains consistent throughout the race years. | 
@@ -26,16 +25,16 @@ The new dataset after splitting was uploaded into DataLake Azure ADLS Gen2, orga
 
 It's recommended to go through some documentation before proceeding with this project. The Ergast Developer API website provides extensive information about the various tables and their relationships. To get a better understanding, it's beneficial to review the ERD diagram and Ergast Database User Guide
 
-## Technical Requirements and Environment setup:
+## Environment setup:
 * Azure subcription
 * Azure Data Lake Storage Gen2
 * Azure Data Factory
-* Azure Databricks 
-  * Create, configure and monitor Databricks clusters
-  * Configure Databricks to use the ABFS driver to read and write data stored on Azure Data Lake Storage Gen2 using secrets stored in Azure Key Vault.
-  * Use Delta Lake to implement a solution using Lakehouse architecture
 * Azure SQL Database
 * Azure Key Vault
+* Azure Databricks
+** Create, configure and monitor Databricks clusters
+** Configure Databricks to use the ABFS driver to read and write data stored on Azure Data Lake Storage Gen2 using secrets stored in Azure Key Vault. A Pyspark function was used to mount the AZure ADLS Gen 2 to Databricks.
+** Use Delta Lake to implement a solution using Lakehouse architecture
 
 ### Languages
 * Spark SQL
