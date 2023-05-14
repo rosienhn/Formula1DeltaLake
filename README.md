@@ -23,7 +23,6 @@ The new dataset after splitting was uploaded into DataLake Azure ADLS Gen2, orga
 2. Using Databricks, the data must be ingested into Data lake in delta formats, transformed into tables for reporting and analysis, made available for machine learning and copied to Azure SQL database. 
 3. Finally, pipelines must be scheduled, monitored, and alerts set up for pipeline failures.
 
-It's recommended to go through some documentation before proceeding with this project. The Ergast Developer API website provides extensive information about the various tables and their relationships. To get a better understanding, it's beneficial to review the ERD diagram and Ergast Database User Guide
 
 ## Environment setup:
 * Azure subcription
